@@ -19,8 +19,6 @@ Usage is the same as The League’s OAuth client, using `\Shippinno\NextEngine\O
 
 ### Authorization Code Flow
 
-session_start();
-
 ```php
 <?php
 $provider = new \Shippinno\NextEngine\OAuth2\Client\Provider\NextEngineProvider([
