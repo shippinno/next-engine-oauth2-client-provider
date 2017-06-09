@@ -72,7 +72,7 @@ class NextEngineProvider extends AbstractProvider
      */
     protected function checkResponse(ResponseInterface $response, $data)
     {
-        if ('error' === $data['result']) {
+        if (isset($data['result']) && 'error' === $data['result']) {
             throw new IdentityProviderException(
                 $data['message'] ?: $response->getReasonPhrase(),
                 $response->getStatusCode(),
