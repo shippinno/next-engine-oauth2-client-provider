@@ -34,13 +34,13 @@ if (!isset($_GET['uid']) || !isset($_GET['state'])) {
     exit;
 } else {
     $token = $nextEngineProvider->getAccessToken('client_credentials', [
-        'uid' => $_GET['uid']),
+        'uid' => $_GET['uid'],
         'state' => $_GET['state']
     ]);
 
     try {
         $user = $provider->getResourceOwner($token);
-        printf('Hello %s!', $user->getShopName());
+        printf('Hello %s!', $user->getCompanyName());
     } catch (Exception $e) {
         exit('Oh dear...');
     }
