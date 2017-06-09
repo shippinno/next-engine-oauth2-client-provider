@@ -6,11 +6,15 @@ use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class NextEngineProvider extends AbstractProvider
 {
+    /**
+     * @var string Key used in a token response to identify the resource owner.
+     */
+    const ACCESS_TOKEN_RESOURCE_OWNER_ID = 'uid';
+
     /**
      * Returns the base URL for authorizing a client.
      *
@@ -19,50 +23,6 @@ class NextEngineProvider extends AbstractProvider
     public function getBaseAuthorizationUrl()
     {
         return 'https://base.next-engine.org/users/sign_in/';
-    }
-
-    /**
-     * Returns authorization parameters based on provided options.
-     *
-     * @param  array $options
-     * @return array Authorization parameters
-     */
-    protected function getAuthorizationParameters(array $options)
-    {
-        if (!isset($options['redirect_uri'])) {
-            $options['redirect_uri'] = $this->redirectUri;
-        }
-
-        $options['client_id'] = $this->clientId;
-        $options['client_secret'] = $this->clientSecret;
-
-        return $options;
-    }
-
-    /**
-     * Builds the authorization URL's query string.
-     *
-     * @param  array $params Query parameters
-     * @return string Query string
-     */
-    protected function getAuthorizationQuery(array $params)
-    {
-        return $this->buildQueryString($params);
-    }
-
-    /**
-     * Builds the authorization URL.
-     *
-     * @param  array $options
-     * @return string Authorization URL
-     */
-    public function getAuthorizationUrl(array $options = [])
-    {
-        $base   = $this->getBaseAuthorizationUrl();
-        $params = $this->getAuthorizationParameters($options);
-        $query  = $this->getAuthorizationQuery($params);
-
-        return $this->appendQuery($base, $query);
     }
 
     /**
@@ -112,13 +72,50 @@ class NextEngineProvider extends AbstractProvider
      */
     protected function checkResponse(ResponseInterface $response, $data)
     {
-        if (isset($data['error'])) {
+        if ('error' === $data['result']) {
             throw new IdentityProviderException(
-                $data['error'] ?: $response->getReasonPhrase(),
+                $data['message'] ?: $response->getReasonPhrase(),
                 $response->getStatusCode(),
                 $response->getBody()
             );
         }
+    }
+
+    /**
+     * Returns authorization parameters based on provided options.
+     *
+     * @param  array $options
+     * @return array Authorization parameters
+     */
+    protected function getAuthorizationParameters(array $options)
+    {
+        if (!isset($options['redirect_uri'])) {
+            $options['redirect_uri'] = $this->redirectUri;
+        }
+
+        $options['client_id'] = $this->clientId;
+        $options['client_secret'] = $this->clientSecret;
+
+        return $options;
+    }
+
+    /**
+     * Requests an access token using a specified grant and option set.
+     *
+     * @param  mixed $grant
+     * @param  array $options
+     * @return AccessToken
+     */
+    public function getAccessToken($grant, array $options = [])
+    {
+        $grant = $this->verifyGrant($grant);
+
+        $request  = $this->getAccessTokenRequest($options);
+        $response = $this->getParsedResponse($request);
+        $prepared = $this->prepareAccessTokenResponse($response);
+        $token    = $this->createAccessToken($prepared, $grant);
+
+        return $token;
     }
 
     /**
