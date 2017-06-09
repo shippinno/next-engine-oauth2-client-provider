@@ -21,6 +21,7 @@ Usage is the same as The League’s OAuth client, using `\Shippinno\NextEngine\O
 
 ```php
 <?php
+
 $provider = new \Shippinno\NextEngine\OAuth2\Client\Provider\NextEngineProvider([
     'clientId'          => '{next-engine-client-id}',
     'clientSecret'      => '{next-engine-lient-secret}',
@@ -33,12 +34,14 @@ if (!isset($_GET['uid']) || !isset($_GET['state'])) {
     exit;
 } else {
     $token = $provider->getAccessToken('authorization_code');
+
     try {
         $user = $provider->getResourceOwner($token);
         printf('Hello %s!', $user->getShopName());
     } catch (Exception $e) {
         exit('Oh dear...');
     }
+    
     echo $token->getToken();
 }
 
