@@ -52,7 +52,7 @@ class NextEngineTest extends TestCase
         $client = Mockery::mock(ClientInterface::class);
         $client->shouldReceive('send')->once()->andReturn($response);
         $this->provider->setHttpClient($client);
-        $token = $this->provider->getAccessToken('authorization_code', ['code' => 'mock_authorization_code']);
+        $token = $this->provider->getAccessToken('authorization_code', ['uid' => uniqid(), 'state' => uniqid()]);
         $this->assertEquals('mock_access_token', $token->getToken());
         $this->assertNull($token->getExpires());
         $this->assertNull($token->getRefreshToken());
@@ -67,7 +67,7 @@ class NextEngineTest extends TestCase
         $message = uniqid();
         $status = rand(400, 600);
         $postResponse = Mockery::mock(ResponseInterface::class);
-        $postResponse->shouldReceive('getBody')->andReturn(' {"result":"error","message":"' . $message . '"}');
+        $postResponse->shouldReceive('getBody')->andReturn('{"result":"error","message":"' . $message . '"}');
         $postResponse->shouldReceive('getHeader')->andReturn(['content-type' => 'json']);
         $postResponse->shouldReceive('getStatusCode')->andReturn($status);
         $client = Mockery::mock('GuzzleHttp\ClientInterface');
