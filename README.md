@@ -33,7 +33,10 @@ if (!isset($_GET['uid']) || !isset($_GET['state'])) {
     header('Location: '.$authUrl);
     exit;
 } else {
-    $token = $provider->getAccessToken('authorization_code');
+    $token = $nextEngineProvider->getAccessToken('client_credentials', [
+        'uid' => $_GET['uid']),
+        'state' => $_GET['state']
+    ]);
 
     try {
         $user = $provider->getResourceOwner($token);
