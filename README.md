@@ -2,6 +2,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/w-takumi/oauth2-next-engine/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/w-takumi/oauth2-next-engine/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/w-takumi/oauth2-next-engine/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/w-takumi/oauth2-next-engine/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/w-takumi/oauth2-next-engine/badges/build.png?b=master)](https://scrutinizer-ci.com/g/w-takumi/oauth2-next-engine/build-status/master)
+[![Build Status](https://travis-ci.org/w-takumi/oauth2-next-engine.svg?branch=master)](https://travis-ci.org/w-takumi/oauth2-next-engine)
 
 This package provides Resource [Next Engine](http://next-engine.net/) OAuth 2.0 support for the PHP League’s [OAuth 2.0 Client](https://github.com/thephpleague/oauth2-client).
 
