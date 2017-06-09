@@ -67,7 +67,7 @@ class NextEngineTest extends TestCase
         $message = uniqid();
         $status = rand(400, 600);
         $postResponse = Mockery::mock(ResponseInterface::class);
-        $postResponse->shouldReceive('getBody')->andReturn(' {"error":"' . $message . '"}');
+        $postResponse->shouldReceive('getBody')->andReturn(' {"result":"error","message":"' . $message . '"}');
         $postResponse->shouldReceive('getHeader')->andReturn(['content-type' => 'json']);
         $postResponse->shouldReceive('getStatusCode')->andReturn($status);
         $client = Mockery::mock('GuzzleHttp\ClientInterface');
